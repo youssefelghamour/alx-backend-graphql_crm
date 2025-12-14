@@ -8,15 +8,7 @@ GraphQL-based CRM backend built with Django, supporting customers, products, and
 - Bulk customer creation with partial success handling  
 - Nested order creation with product associations  
 - Validation and user-friendly error messages  
-- GraphQL queries with filtering, sorting, and pagination  
-
-## Tech Stack
-
-- Django  
-- graphene-django  
-- django-filter  
-- PostgreSQL/MySQL (optional)  
-- GraphiQL / Insomnia for testing  
+- GraphQL queries with filtering, sorting
 
 ## GraphQL Endpoint
 
