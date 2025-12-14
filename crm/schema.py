@@ -21,6 +21,9 @@ class CustomerType(DjangoObjectType):
         filterset_class = CustomerFilter
         fields = ("id", "name", "email", "phone", "orders", "created_at")
 
+    def resolve_orders(self, info):
+        return self.orders.all()
+
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
