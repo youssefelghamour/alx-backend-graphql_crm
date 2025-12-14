@@ -1,10 +1,11 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from .models import Customer, Product, Order
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from decimal import Decimal
-from django.db import transaction
+from .filters import CustomerFilter, ProductFilter, OrderFilter
 import re
 
 
@@ -16,17 +17,28 @@ PHONE_REGEX = re.compile(r"^(\+\d{10,15}|\d{3}-\d{3}-\d{4})$")
 class CustomerType(DjangoObjectType):
     class Meta:
         model = Customer
-        fields = ("id", "name", "email", "phone", "orders")
+        interfaces = (graphene.relay.Node,)
+        filterset_class = CustomerFilter
+        fields = ("id", "name", "email", "phone", "orders", "created_at")
 
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
+        interfaces = (graphene.relay.Node,)
+        filterset_class = ProductFilter
         fields = ("id", "name", "price", "stock")
 
 class OrderType(DjangoObjectType):
+    products = graphene.List(ProductType)  # override connection with plain list
+
     class Meta:
         model = Order
+        interfaces = (graphene.relay.Node,)
+        filterset_class = OrderFilter
         fields = ("id", "customer", "products", "total_amount", "order_date")
+    
+    def resolve_products(self, info):
+        return list(self.products.all())
 
 
 
@@ -234,6 +246,50 @@ class Query(graphene.ObjectType):
 
     def resolve_orders(root, info):
         return Order.objects.all()
+
+    # FILTERS
+
+    # Customers query with filters and ordering
+    allCustomers = DjangoFilterConnectionField(
+        CustomerType,
+        orderBy=graphene.List(of_type=graphene.String)  # Argument to sort customers (by name, email, created_at in asc/desc order)
+    )
+
+    def resolve_allCustomers(self, info, orderBy=None, **kwargs):
+        qs = Customer.objects.all()  # Start with all customers
+        if kwargs:  # Apply filters from CustomerFilter (name, email, createdAtGte/Lte, phone_starts_with)
+            qs = CustomerFilter(kwargs, queryset=qs).qs
+        if orderBy:  # Apply ordering if provided
+            qs = qs.order_by(*orderBy)
+        return qs
+
+    # Products query with filters and ordering
+    allProducts = DjangoFilterConnectionField(
+        ProductType,
+        orderBy=graphene.List(of_type=graphene.String)  # Argument to sort products (by name, price, stock in asc/desc order)
+    )
+
+    def resolve_allProducts(self, info, orderBy=None, **kwargs):
+        qs = Product.objects.all()  # Start with all products
+        if kwargs:  # Apply filters from ProductFilter (name, price, stock, lowStock)
+            qs = ProductFilter(kwargs, queryset=qs).qs
+        if orderBy:  # Apply ordering if provided
+            qs = qs.order_by(*orderBy)
+        return qs
+
+    # Orders query with filters and ordering
+    allOrders = DjangoFilterConnectionField(
+        OrderType,
+        orderBy=graphene.List(of_type=graphene.String)  # Argument to sort orders (by order_date, total_amount, customer__name in asc/desc order)
+    )
+
+    def resolve_allOrders(self, info, orderBy=None, **kwargs):
+        qs = Order.objects.all()  # Start with all orders
+        if kwargs:  # Apply filters from OrderFilter (customerName, productName, totalAmountGte/Lte, orderDateAfter/Before, product_id)
+            qs = OrderFilter(kwargs, queryset=qs).qs
+        if orderBy:  # Apply ordering if provided
+            qs = qs.order_by(*orderBy)
+        return qs
 
 # ────────────── MUTATION ──────────────
 

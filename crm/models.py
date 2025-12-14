@@ -1,10 +1,12 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(default=now, editable=False)
 
     def __str__(self):
         return self.name
