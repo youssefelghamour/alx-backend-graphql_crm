@@ -250,7 +250,7 @@ class Query(graphene.ObjectType):
     # FILTERS
 
     # Customers query with filters and ordering
-    allCustomers = DjangoFilterConnectionField(
+    all_customers = DjangoFilterConnectionField(
         CustomerType,
         orderBy=graphene.List(of_type=graphene.String)  # Argument to sort customers (by name, email, created_at in asc/desc order)
     )
@@ -264,7 +264,7 @@ class Query(graphene.ObjectType):
         return qs
 
     # Products query with filters and ordering
-    allProducts = DjangoFilterConnectionField(
+    all_products = DjangoFilterConnectionField(
         ProductType,
         orderBy=graphene.List(of_type=graphene.String)  # Argument to sort products (by name, price, stock in asc/desc order)
     )
@@ -278,7 +278,7 @@ class Query(graphene.ObjectType):
         return qs
 
     # Orders query with filters and ordering
-    allOrders = DjangoFilterConnectionField(
+    all_orders = DjangoFilterConnectionField(
         OrderType,
         orderBy=graphene.List(of_type=graphene.String)  # Argument to sort orders (by order_date, total_amount, customer__name in asc/desc order)
     )
