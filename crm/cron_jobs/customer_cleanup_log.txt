@@ -1,0 +1,7 @@
+2026-01-06 20:53:27.251874+00:00: Deleted 0 customers
+2026-01-06 20:54:42.214144+00:00: Deleted 0 customers
+2026-01-06 20:56:49.451316+00:00: Deleted 0 customers
+2026-01-06 20:57:29.926731+00:00: Deleted 0 customers
+2026-01-06 20:58:04.751801+00:00: Deleted 0 customers
+2026-01-06 21:00:52.607747+00:00: Deleted 1 customers
+2026-01-06 21:04:19.307813+00:00: Deleted 1 customers
