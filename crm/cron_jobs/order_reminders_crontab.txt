@@ -1,0 +1,2 @@
+# A cron job that runs the order reminders script daily at 8:00 AM
+0 8 * * * /root/alx-backend-graphql_crm/crm/cron_jobs/send_order_reminders.py
