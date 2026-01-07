@@ -15,5 +15,5 @@ for customer in Customer.objects.all():
         deleted_count += 1
     
 # Log the number of deleted customers to a /tmp/customer_cleanup_log.txt with a timestamp
-with open('crm/cron_jobs/customer_cleanup_log.txt', 'a') as log_file:
+with open('crm/cron_jobs/tmp/customer_cleanup_log.txt', 'a') as log_file:
     log_file.write(f"{now()}: Deleted {deleted_count} customers\n")  

@@ -39,7 +39,7 @@ for edge in result["allOrders"]["edges"]:
     customer_email = order["customer"]["email"]
     order_id = order["id"]
 
-    with open("order_reminders_log.txt", "a") as log_file:
+    with open("tmp/order_reminders_log.txt", "a") as log_file:
         timestamp = datetime.now()
         log_file.write(f"[{timestamp}] - Order ID: {order['id']}, Customer Email: {customer_email}\n")
 
