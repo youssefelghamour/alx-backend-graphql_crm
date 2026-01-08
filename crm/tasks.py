@@ -2,6 +2,7 @@ from celery import shared_task
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from datetime import datetime
+import requests
 
 
 @shared_task
@@ -33,6 +34,7 @@ def generate_crm_report():
         f"[{now}] Report: {customer_count} customers, {order_count} orders, ${total_revenue:.2f} revenue\n"
     )
 
+    # Store the report in a log file in /tmp/crm_report_log.txt
     with open('crm/tmp/crm_report.log', 'a') as log_file:
         log_file.write(log_line)
     
