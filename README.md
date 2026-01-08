@@ -1,6 +1,6 @@
 # ALX Backend GraphQL CRM
 
-GraphQL-based CRM backend built with Django, supporting customers, products, and orders with filtering, sorting, and robust validation.
+GraphQL-based CRM backend built with Django, supporting customers, products, and orders with filtering, sorting, robust validation, and automated background tasks using Cron, Django-Crontab, and Celery with Redis.
 
 ## Features
 
@@ -9,6 +9,7 @@ GraphQL-based CRM backend built with Django, supporting customers, products, and
 - Nested order creation with product associations  
 - Validation and user-friendly error messages  
 - GraphQL queries with filtering, sorting
+- Automated background tasks for data cleanup, order reminders, and low-stock updates using Cron, Django-Crontab, and Celery + Redis
 
 ## GraphQL Endpoint
 
@@ -230,6 +231,21 @@ mutation {
 }
 ```
 
+- **Restock Products**: update low-stock products (stock < 10) by increasing the stock by 10 units:
+
+```graphql
+mutation {
+    updateLowStockProducts {
+        products {
+            id
+            name
+            stock
+        }
+        message
+    }
+}
+```
+
 
 ### Example Queries (Filters)
 - **Customers** – filter by name, creation date, email, or phone pattern.
@@ -291,3 +307,18 @@ query {
     }
 }
 ```
+
+
+## Background Tasks & Scheduled Jobs
+
+This project includes automated tasks using System Cron, Django-Crontab, and Celery with Beat + Redis.
+- System Cron Jobs (Ubuntu) – run shell or Python scripts directly for tasks like:
+    - Cleaning inactive customers
+    - Sending order reminders
+- Django-Crontab – schedules Django tasks like daily reports via crontab entries in settings.py.
+- Celery + Beat + Redis – handles asynchronous background tasks:
+    - Beat reads the schedule defined in settings.py and pushes tasks to Redis
+    - Celery workers pick up the tasks from Redis and execute them asynchronously
+    - Example: Restocking products with stock < 10
+
+See [cron-celery-project-guide.md](cron-celery-project-guide.md) for more details.
