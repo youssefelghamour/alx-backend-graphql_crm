@@ -41,6 +41,7 @@ def update_low_stock():
                     name
                     stock
                 }
+            }
         }
     """)
 
