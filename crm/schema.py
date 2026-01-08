@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from crm.models import Customer, Product, Order
+from crm.models import Product, Customer, Order
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from decimal import Decimal
